@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+    <title>Manage Items & Categories</title>
+    <style>
+        #addCategoryForm {
+  margin-top: 40px;
+  background: #ffffff;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+  max-width: 600px;
+  width: 100%;
+}
+
+#addCategoryForm h3 {
+  margin-bottom: 20px;
+  font-size: 20px;
+  color: #333;
+}
+
+#categoryForm label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: #444;
+}
+
+#categoryForm input[type="text"] {
+  width: 100%;
+  padding: 10px 12px;
+  margin-bottom: 16px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  background-color: #f9f9f9;
+  transition: border 0.2s ease-in-out;
+}
+
+#categoryForm input[type="text"]:focus {
+  border-color: #7b2cbf;
+  outline: none;
+  background-color: #fff;
+}
+
+#iconPreview {
+  margin-top: 5px;
+  display: inline-block;
+  color: #7b2cbf;
+}
+
+#submitCategoryBtn {
+  background-color: #7b2cbf;
+  color: #fff;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+#submitCategoryBtn:hover {
+  background-color: #434fdd;
+}
+
+    </style>
+</head>
+
+<body class="body">
+    <section class="header">
+        <div class="logo">
+            <i class="ri-menu-line menu"></i>
+            <h2><span>BillZ</span> Cafe</h2>
+        </div>
+        <div class="header--items">
+            <div class="dark--theme--btn">
+                <i class="ri-moon-line moon"></i>
+                <i class="ri-sun-line sun"></i>
+            </div>
+        </div>
+    </section>
+    <section class="main">
+        <div class="sidebar">
+            <ul class="sidebar--items">
+                <li><a href="main" class="active"><span class="icon"><i class="ri-bar-chart-line"></i></span>
+                        <div class="sidebar--item">Overview</div>
+                    </a></li>
+                <li><a href="manage-items"><span class="icon"><i class="ri-handbag-line"></i></span>
+                        <div class="sidebar--item">Manage Items</div>
+                    </a></li>
+                <li><a href="manage-categories"><span class="icon"><i class="fa-solid fa-layer-group"></i></span>
+                        <div class="sidebar--item">Manage Categories</div>
+                    </a></li>
+                <li><a href="settings"><span class="icon"><i class="ri-settings-3-line"></i></span>
+                        <div class="sidebar--item">Settings</div>
+                    </a></li>
+            </ul>
+            <ul class="sidebar--bottom--items">
+                <li><a href="logout"><span class="icon"><i class="ri-logout-box-r-line"></i></span>
+                        <div class="sidebar--item">Logout</div>
+                    </a></li>
+            </ul>
+        </div>
+        <div class="main--container">
+            <div class="section--title">
+                <h3 class="title">Manage Categories</h3>
+                <button class="add--button" id="addNewCategory"><i class="ri-add-circle-line"></i> Add New Category</button>
+            </div>
+            <div class="manage--content">
+
+                <!-- Categories Table -->
+                <div class="table">
+                    <div class="section--title">
+                        <h3 class="title">Categories</h3>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Category Icon</th>
+                                <th>Category Name</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="categoriesTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Category Add/Edit Form Modal -->
+<div id="addCategoryForm" style="margin-top: 40px; display: none; background: #fff; padding: 20px; border-radius: 8px;">
+    <h3>Add / Edit Category</h3>
+    <form id="categoryForm">
+      <label for="categoryName">Category Name:</label>
+      <input type="text" id="categoryName" name="name" required />
+  
+      <label for="categoryIcon">Font Awesome Icon Class:</label>
+      <input type="text" id="categoryIcon" name="icon" placeholder="e.g. fa-solid fa-mug-hot" required />
+  
+      <div style="margin: 10px 0;">
+        <strong>Preview:</strong>
+        <i id="iconPreview" class="fa-solid fa-mug-hot" style="font-size: 24px;"></i>
+      </div>
+  
+      <div style="margin-top: 10px;">
+        <button type="submit" id="submitCategoryBtn">Add Category</button>
+      </div>
+    </form>
+  </div>
+  
+
+    <script src="./js/main.js"></script>
+    <script src="./js/category.js"></script>
+    
+    <script>
+      const token = localStorage.getItem('adminToken');
+      if (!token) {
+        document.body.innerHTML = `
+          <div style="text-align: center; padding-top: 100px; font-family: sans-serif;">
+            <h2>🚨 Oops!</h2>
+            <p>You haven’t logged in yet 👀</p>
+            <p>Redirecting you to the login page in <span id="countdown">3</span> seconds...</p>
+          </div>
+        `;
+        let seconds = 3;
+        const countdown = setInterval(() => {
+          seconds--;
+          document.getElementById('countdown').textContent = seconds;
+          if (seconds === 0) {
+            clearInterval(countdown);
+            window.location.href = '/login';
+          }
+        }, 1000);
+      }
+    </script>
+<script>
+  document.getElementById('logoutBtn')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    localStorage.removeItem('adminToken');
+    window.location.href = '/login';
+  });
+</script>
+
+      
+</body>
+
+</html>

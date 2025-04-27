@@ -1,0 +1,160 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+    <title>BillZ Cafe</title>
+</head>
+
+<body class="body">
+    <section class="header">
+        <div class="logo">
+            <i class="ri-menu-line menu"></i>
+            <h2><span>BillZ</span> Cafe</h2>
+        </div>
+        <div class="header--items">
+            <div class="dark--theme--btn">
+                <i class="ri-moon-line moon"></i>
+                <i class="ri-sun-line sun"></i>
+            </div>
+        </div>
+    </section>
+    <section class="main">
+      <div class="sidebar">
+        <ul class="sidebar--items">
+            <li><a href="main" class="active"><span class="icon"><i class="ri-bar-chart-line"></i></span>
+                    <div class="sidebar--item">Overview</div>
+                </a></li>
+            <li><a href="manage-items"><span class="icon"><i class="ri-handbag-line"></i></span>
+                    <div class="sidebar--item">Manage Items</div>
+                </a></li>
+            <li><a href="manage-categories"><span class="icon"><i class="fa-solid fa-layer-group"></i></span>
+                    <div class="sidebar--item">Manage Categories</div>
+                </a></li>
+            <li><a href="settings"><span class="icon"><i class="ri-settings-3-line"></i></span>
+                    <div class="sidebar--item">Settings</div>
+                </a></li>
+        </ul>
+        <ul class="sidebar--bottom--items">
+            <li><a href="logout" id="logoutBtn"><span class="icon"><i class="ri-logout-box-r-line"></i></span>
+                    <div class="sidebar--item">Logout</div>
+                </a></li>
+        </ul>
+    </div>
+        <div class="main--container">
+            <div class="section--title">
+                <h3 class="title">OverView</h3>
+            </div>
+            <div class="cards">
+                <div class="card card-2 clickable-card" data-link="manage-items">
+                    <div class="card--title">
+                        <span class="card--icon icon"><i class="ri-gift-line"></i></span>
+                        <span>Items</span>
+                    </div>
+                    <h3 class="card--value" id="item-count"><a href="manage-categories"><i class="ri-add-circle-line up"></i></a></h3>
+                    <div class="chart"><canvas id="orders"></canvas></div>
+                    <div class="card--overlay-wrapper">
+                        <button class="card--overlay" onclick="window.location.href='manage-i'">Manage</button>
+                    </div>
+                </div>
+                <div class="card card-3 clickable-card" data-link="manage-categories">
+                    <div class="card--title">
+                        <span class="card--icon icon"><i class="ri-handbag-line"></i></span>
+                        <span>Categories</span>
+                    </div>
+                    <h3 class="card--value" id="category-count"><a href="manage-category"><i class="ri-add-circle-line up"></i></a></h3>
+                    <div class="chart"><canvas id="products"></canvas></div>
+                    <div class="card--overlay-wrapper">
+                        <button class="card--overlay" onclick="window.location.href='manage-categories'">Manage</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        const token = localStorage.getItem('adminToken');
+        if (!token) {
+          document.body.innerHTML = `
+            <div style="text-align: center; padding-top: 100px; font-family: sans-serif;">
+              <h2>🚨 Oops!</h2>
+              <p>You haven’t logged in yet 👀</p>
+              <p>Redirecting you to the login page in <span id="countdown">3</span> seconds...</p>
+            </div>
+          `;
+          let seconds = 3;
+          const countdown = setInterval(() => {
+            seconds--;
+            document.getElementById('countdown').textContent = seconds;
+            if (seconds === 0) {
+              clearInterval(countdown);
+              window.location.href = '/login';
+            }
+          }, 1000);
+        }
+      </script>
+      
+      
+    <script src="./js/main.js"></script>
+    <script>
+        async function fetchCounts() {
+          try {
+            const [itemsRes, categoriesRes] = await Promise.all([
+              fetch('/api/items'),
+              fetch('/api/categories')
+            ]);
+        
+            const items = await itemsRes.json();
+            const categories = await categoriesRes.json();
+        
+            document.getElementById('item-count').innerHTML = `
+              ${items.length} <a href="manage.html"><i class="ri-add-circle-line up"></i></a>
+            `;
+            document.getElementById('category-count').innerHTML = `
+              ${categories.length} <a href="manage.html"><i class="ri-add-circle-line up"></i></a>
+            `;
+          } catch (error) {
+            console.error('Failed to load counts:', error);
+            document.getElementById('item-count').textContent = 'Error';
+            document.getElementById('category-count').textContent = 'Error';
+          }
+        }
+        
+        fetchCounts();
+
+        
+        </script>
+       <script>
+        document.querySelectorAll('.clickable-card').forEach(card => {
+          card.addEventListener('click', (e) => {
+            // Prevent if the user clicks directly on a button or link inside the card
+            if (e.target.closest('button') || e.target.tagName === 'A') return;
+      
+            const target = card.getAttribute('data-link');
+            if (target) {
+              window.location.href = target;
+            }
+          });
+        });
+      </script>
+
+<script>
+    document.getElementById('logoutBtn')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      localStorage.removeItem('adminToken');
+      window.location.href = '/login';
+    });
+  </script>
+  
+      
+        
+</body>
+
+</html>

@@ -1,0 +1,184 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <title>Settings</title>
+</head>
+
+<body class="body">
+    <section class="header">
+        <div class="logo">
+            <i class="ri-menu-line menu"></i>
+            <h2><span>BillZ</span> Cafe</h2>
+        </div>
+        <div class="header--items">
+            <div class="dark--theme--btn">
+                <i class="ri-moon-line moon"></i>
+                <i class="ri-sun-line sun"></i>
+            </div>
+        </div>
+    </section>
+    <section class="main">
+        <div class="sidebar">
+            <ul class="sidebar--items">
+                <li><a href="main" class="active"><span class="icon"><i class="ri-bar-chart-line"></i></span>
+                        <div class="sidebar--item">Overview</div>
+                    </a></li>
+                <li><a href="manage-items"><span class="icon"><i class="ri-handbag-line"></i></span>
+                        <div class="sidebar--item">Manage Items</div>
+                    </a></li>
+                <li><a href="manage-categories"><span class="icon"><i class="fa-solid fa-layer-group"></i></span>
+                        <div class="sidebar--item">Manage Categories</div>
+                    </a></li>
+                <li><a href="settings"><span class="icon"><i class="ri-settings-3-line"></i></span>
+                        <div class="sidebar--item">Settings</div>
+                    </a></li>
+            </ul>
+            <ul class="sidebar--bottom--items">
+                <li><a href="logout" id="logoutBtn"><span class="icon"><i class="ri-logout-box-r-line"></i></span>
+                        <div class="sidebar--item">Logout</div>
+                    </a></li>
+            </ul>
+        </div>
+        <div class="main--container">
+            <div class="section--title">
+                <h3 class="title">Settings</h3>
+            </div>
+            <div class="settings--content">
+                <div class="settings--section">
+                    <h4>Manage Accounts</h4>
+                    <button class="add--button" onclick="openAddAccountModal()"><i class="ri-add-circle-line"></i> Add Another Account</button>
+                    <br>
+                    <div class="accounts--list" id="accountsList">
+                        <!-- Accounts will be dynamically populated here -->
+                    </div>
+                </div>
+                <div class="settings--section">
+                    <h4>Change Password</h4>
+                    <form class="form" id="passwordForm">
+                        <div class="form--group">
+                            <label for="account-password">Select Account</label>
+                            <select id="account-password">
+                                <!-- Accounts will be dynamically populated here -->
+                            </select>
+                        </div>
+                        <div class="form--group">
+                            <label for="current-password">Current Password</label>
+                            <input type="password" id="current-password" placeholder="Enter current password">
+                        </div>
+                        <div class="form--group">
+                            <label for="new-password">New Password</label>
+                            <input type="password" id="new-password" placeholder="Enter new password">
+                        </div>
+                        <br>
+                        <button type="submit" class="update--button">Update Password</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Add Account Modal -->
+    <div id="addAccountModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('addAccountModal')">&times;</span>
+            <h2>Add New Account</h2>
+            <form id="addAccountForm">
+                <div class="form--group">
+                    <label for="new-username">Username</label>
+                    <input type="text" id="new-username" placeholder="Enter username" required>
+                </div>
+                <div class="form--group">
+                    <label for="new-account-password">Password</label>
+                    <input type="password" id="new-account-password" placeholder="Enter password" required>
+                </div>
+                <br>
+                <button type="submit" class="add--button">Add Account</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="./js/main.js"></script>
+    <style>
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 50%;
+            border-radius: 8px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+
+        
+<script>
+    const token = localStorage.getItem('adminToken');
+    if (!token) {
+      document.body.innerHTML = `
+        <div style="text-align: center; padding-top: 100px; font-family: sans-serif;">
+          <h2>🚨 Oops!</h2>
+          <p>You haven’t logged in yet 👀</p>
+          <p>Redirecting you to the login page in <span id="countdown">3</span> seconds...</p>
+        </div>
+      `;
+      let seconds = 3;
+      const countdown = setInterval(() => {
+        seconds--;
+        document.getElementById('countdown').textContent = seconds;
+        if (seconds === 0) {
+          clearInterval(countdown);
+          window.location.href = '/login';
+        }
+      }, 1000);
+    }
+  </script>
+<script>
+document.getElementById('logoutBtn')?.addEventListener('click', (e) => {
+  e.preventDefault();
+  localStorage.removeItem('adminToken');
+  window.location.href = '/login';
+});
+</script>
+
+<script src="./js/settings.js"></script>
+
+    
+
+</body>
+
+</html>

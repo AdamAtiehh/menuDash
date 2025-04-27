@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/login.css">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+    <title>Login</title>
+</head>
+
+<body class="body">
+    <section class="login--container">
+        <div class="login--box">
+            <div class="login--header">
+                <h2>Login to <span>BillZ</span> Cafe</h2>
+            </div>
+            <!-- Make sure the action points to the correct path -->
+            <form class="login--form">
+                <div class="form--group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" placeholder="Enter your username" required>
+                </div>
+                <div class="form--group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                </div>
+                <button type="submit" class="login--button">Login</button>
+            </form>
+        </div>
+    </section>
+    <script>
+        document.querySelector('.login--form').addEventListener('submit', async function (e) {
+          e.preventDefault();
+        
+          const username = document.getElementById('username').value;
+          const password = document.getElementById('password').value;
+        
+          try {
+            const response = await fetch('/api/login', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ username, password })
+            });
+        
+            const data = await response.json();
+        
+            if (response.ok) {
+              // Save token (optional for future protected routes)
+              localStorage.setItem('adminToken', data.token);
+        
+              // ✅ Redirect to main.html
+              window.location.href = '/main';
+            } else {
+              alert(data.error || 'Login failed. Please try again.');
+            }
+          } catch (err) {
+            console.error('Login error:', err);
+            alert('Server error. Please try again later.');
+          }
+        });
+        </script>
+        
+</body>
+
+</html>
