@@ -1,5 +1,5 @@
 // ✅ Base API URL
-const API_BASE = 'http://localhost:5000/api';
+const API_BASE = 'https://menudash.onrender.com/api';
 
 // ✅ Select DOM elements
 const categoryList = document.getElementById('categoryList');

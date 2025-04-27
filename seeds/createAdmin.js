@@ -8,7 +8,7 @@ const Admin = require('../BillzCafe-main/models/Admin');
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI)
   .then(async () => {
-    const username = 'admin';
+    const username = 'admin123';
     const password = 'password123'; // CHANGE THIS TO SOMETHING STRONG
 
     const existing = await Admin.findOne({ username });
